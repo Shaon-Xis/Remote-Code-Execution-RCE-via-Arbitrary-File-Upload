@@ -13,6 +13,13 @@ The "Product Expiry Alert Management System" contains a critical security flaw i
 
 A significant logic flaw was also identified: the application calls `move_uploaded_file()` **before** performing database integrity checks. This ensures that even if the form submission is rejected by the database (e.g., "Product Already Exist"), the uploaded web shell is still successfully persisted on the server.
 
+Uniqueness
+The "Product Expiry Alert Management System" contains a critical security flaw in its `add-product.php` component. While other parts of the system may have been reported for file upload issues, this specific endpoint exhibits a **unique logic flow vulnerability** that distinguishes it from known CVEs (such as CVE-2025-3765).
+
+### Why this is Unique (Avoid Duplicate):
+1. **Endpoint Specificity**: The vulnerability resides in the product management module (`add-product.php`), which is functionally and code-wise distinct from user profile modules.
+2. **Critical Logic Flaw**: The application calls `move_uploaded_file()` **before** performing any database integrity or duplicate record checks. 
+3. **Attack Persistence**: Unlike standard upload flaws, an attacker can achieve a successful web shell persistence even if the application rejects the transaction (e.g., "Product Already Exist"). This proves the backend fails to maintain atomic operations between file handling and data validation.
 ---
 
 ## 🛠️ Proof of Concept (PoC)
